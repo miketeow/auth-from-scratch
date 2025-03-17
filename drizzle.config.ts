@@ -1,0 +1,16 @@
+/* eslint-disable check-file/filename-naming-convention */
+import "dotenv/config";
+import { defineConfig } from "drizzle-kit";
+
+import { env } from "@/data/server";
+
+export default defineConfig({
+  out: "./src/drizzle/migrations",
+  schema: "./src/drizzle/schema.ts",
+  dialect: "postgresql",
+  strict: true,
+  verbose: true,
+  dbCredentials: {
+    url: env.DATABASE_URL,
+  },
+});
