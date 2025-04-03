@@ -1,5 +1,7 @@
 import Link from "next/link";
 
+import { getCurrentUser } from "@/auth/current-user";
+import LogOutButton from "@/auth/nextjs/log-out-button";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -9,8 +11,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-export default function Home() {
-  const fullUser = { id: null, role: null };
+export default async function Home() {
+  const fullUser = await getCurrentUser();
   return (
     <div className="container mx-auto px-4">
       {fullUser == null ? (
@@ -40,9 +42,10 @@ export default function Home() {
             </Button>
             {fullUser.role == "admin" && (
               <Button asChild variant="outline">
-                <Link href="/private-page">Private Page</Link>
+                <Link href="/private-page">Admin Page</Link>
               </Button>
             )}
+            <LogOutButton />
           </CardFooter>
         </Card>
       )}
