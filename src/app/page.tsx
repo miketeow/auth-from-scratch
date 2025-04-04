@@ -12,7 +12,7 @@ import {
 } from "@/components/ui/card";
 
 export default async function Home() {
-  const fullUser = await getCurrentUser();
+  const fullUser = await getCurrentUser({ withFullUser: true });
   return (
     <div className="container mx-auto px-4">
       {fullUser == null ? (
@@ -30,10 +30,7 @@ export default async function Home() {
             <CardTitle>User Info</CardTitle>
           </CardHeader>
           <CardContent>
-            <div>
-              Username: {fullUser.id}
-              {/* TODO: Fix */}
-            </div>
+            <div>Username: {fullUser.name}</div>
             <div>Role: {fullUser.role}</div>
           </CardContent>
           <CardFooter className="flex gap-4">
