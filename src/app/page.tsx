@@ -35,11 +35,11 @@ export default async function Home() {
           </CardContent>
           <CardFooter className="flex gap-4">
             <Button asChild variant="outline">
-              <Link href="/private-page">Private Page</Link>
+              <Link href="/private">Private Page</Link>
             </Button>
             {fullUser.role == "admin" && (
               <Button asChild variant="outline">
-                <Link href="/private-page">Admin Page</Link>
+                <Link href="/admin">Admin Page</Link>
               </Button>
             )}
             <LogOutButton />

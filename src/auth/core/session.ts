@@ -74,3 +74,37 @@ export async function removeUserFromSession(
   await redisClient.del(`session:${sessionId}`);
   cookies.delete(COOKIE_SESSION_KEY);
 }
+
+export async function updateUserSessionData(
+  user: UserSession,
+  cookies: Pick<Cookies, "get">
+) {
+  // Get session
+  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
+  if (sessionId == null) return null;
+
+  // Reset expiration date, update the new user data
+  await redisClient.set(`session:${sessionId}`, sessionSchema.parse(user), {
+    ex: SESSION_EXPIRATION_SECONDS,
+  });
+}
+
+export async function updateUserSessionExpiration(
+  cookies: Pick<Cookies, "get" | "set">
+) {
+  // Get session from cookies
+  const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
+  if (sessionId == null) return null;
+
+  // Get user info by session
+  const user = await getUserSessionById(sessionId);
+  if (user == null) return;
+
+  // Reset the expiration date in redis
+  await redisClient.set(`session:${sessionId}`, user, {
+    ex: SESSION_EXPIRATION_SECONDS,
+  });
+
+  // pass the session into cookie
+  setCookie(sessionId, cookies);
+}
