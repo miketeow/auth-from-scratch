@@ -1,17 +1,22 @@
 import crypto from "crypto";
+import { promisify } from "util";
 
-export function hashPassword(password: string, salt: string): Promise<string> {
-  return new Promise((resolve, reject) => {
-    crypto.scrypt(password.normalize(), salt, 64, (error, hash) => {
-      if (error) reject(error);
+//Promisify scrypt for cleaner async await syntax
+const scryptAsync = promisify(crypto.scrypt);
 
-      resolve(hash.toString("hex").normalize());
-    });
-  });
+export async function hashPassword(
+  password: string,
+  salt: string
+): Promise<string> {
+  const normalizePassword = password.normalize();
+  // Use type assertion, directly tell TypeScript that it will return a buffer
+  // if success based on the scrypt API documentation
+  const derivedKey = (await scryptAsync(normalizePassword, salt, 64)) as Buffer;
+  return derivedKey.toString("hex");
 }
 
 export function generateSalt() {
-  return crypto.randomBytes(16).toString("hex").normalize();
+  return crypto.randomBytes(16).toString("hex");
 }
 
 export async function comparePasswords({

@@ -46,7 +46,6 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
 export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
   const { success, data } = signUpSchema.safeParse(unsafeData);
   if (!success) {
-    console.log(data);
     return "Unable to create account";
   }
 

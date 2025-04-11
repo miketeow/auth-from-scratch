@@ -1,4 +1,3 @@
-import crypto from "crypto";
 import { z } from "zod";
 
 import { userRoles } from "@/drizzle/schema";
@@ -33,7 +32,9 @@ export async function createUserSession(
   user: UserSession,
   cookies: Pick<Cookies, "set">
 ) {
-  const sessionId = crypto.randomBytes(512).toString("hex").normalize();
+  const randomBytes = new Uint8Array(32);
+  globalThis.crypto.getRandomValues(randomBytes);
+  const sessionId = Buffer.from(randomBytes).toString("hex");
   await redisClient.set(`session:${sessionId}`, sessionSchema.parse(user), {
     ex: SESSION_EXPIRATION_SECONDS,
   });
