@@ -97,15 +97,24 @@ export async function updateUserSessionExpiration(
   const sessionId = cookies.get(COOKIE_SESSION_KEY)?.value;
   if (sessionId == null) return null;
 
-  // Get user info by session
-  const user = await getUserSessionById(sessionId);
-  if (user == null) return;
-
-  // Reset the expiration date in redis
-  await redisClient.set(`session:${sessionId}`, user, {
-    ex: SESSION_EXPIRATION_SECONDS,
-  });
-
-  // pass the session into cookie
-  setCookie(sessionId, cookies);
+  try {
+    const result = await redisClient.expire(
+      `session:${sessionId}`,
+      SESSION_EXPIRATION_SECONDS
+    );
+    if (result === 0) {
+      // Session didn't exist in Redis, maybe expired between requests
+      console.log("session id not found");
+      // Optional, consider to delete cookie if session is gone
+      // cookies.delete(COOKIE_SESSION_KEY)
+      return;
+    } else {
+      console.log("Update session expiration success");
+    }
+  } catch (error) {
+    console.log(
+      "updateUserSessionExpiration: Error updating user session expiration",
+      error
+    );
+  }
 }

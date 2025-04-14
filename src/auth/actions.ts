@@ -7,8 +7,9 @@ import { eq } from "drizzle-orm";
 import { z } from "zod";
 
 import { db } from "@/drizzle/db";
-import { UserTable } from "@/drizzle/schema";
+import { OAuthProvider, UserTable } from "@/drizzle/schema";
 
+import { OAuthClient } from "./core/oauth/base";
 import {
   comparePasswords,
   generateSalt,
@@ -26,7 +27,7 @@ export async function signIn(unsafeData: z.infer<typeof signInSchema>) {
     where: eq(UserTable.email, data.email),
   });
 
-  if (user == null) {
+  if (user == null || user.password == null || user.salt == null) {
     return "Unable to log you in";
   }
 
@@ -74,7 +75,14 @@ export async function signUp(unsafeData: z.infer<typeof signUpSchema>) {
 
   redirect("/");
 }
+
 export async function logOut() {
   await removeUserFromSession(await cookies());
   redirect("/");
+}
+
+export async function oAuthSignIn(provider: OAuthProvider) {
+  // Get oauth url
+
+  redirect(new OAuthClient().createAuthUrl(await cookies()));
 }

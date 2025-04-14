@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 
-import { signUp } from "../actions";
+import { oAuthSignIn, signUp } from "../actions";
 import { signUpSchema } from "../schema";
 
 export function SignUpForm() {
@@ -40,8 +40,18 @@ export function SignUpForm() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         {error && <p className="text-destructive">{error}</p>}
         <div className="flex gap-4">
-          <Button type="button">Discord</Button>
-          <Button type="button">GitHub</Button>
+          <Button
+            type="button"
+            onClick={async () => await oAuthSignIn("discord")}
+          >
+            Discord
+          </Button>
+          <Button
+            type="button"
+            onClick={async () => await oAuthSignIn("github")}
+          >
+            GitHub
+          </Button>
         </div>
         <FormField
           control={form.control}
