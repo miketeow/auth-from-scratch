@@ -9,7 +9,7 @@ import { z } from "zod";
 import { db } from "@/drizzle/db";
 import { OAuthProvider, UserTable } from "@/drizzle/schema";
 
-import { OAuthClient } from "./core/oauth/base";
+import { getOAuthClient } from "./core/oauth/base";
 import {
   comparePasswords,
   generateSalt,
@@ -83,6 +83,7 @@ export async function logOut() {
 
 export async function oAuthSignIn(provider: OAuthProvider) {
   // Get oauth url
+  const oAuthClient = getOAuthClient(provider);
 
-  redirect(new OAuthClient().createAuthUrl(await cookies()));
+  redirect(oAuthClient.createAuthUrl(await cookies()));
 }
