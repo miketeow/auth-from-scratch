@@ -1,5 +1,6 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 
 import { eq } from "drizzle-orm";
@@ -19,4 +20,6 @@ export async function toggleRole() {
     .returning({ id: UserTable.id, role: UserTable.role });
 
   await updateUserSessionData(updatedUser, await cookies());
+
+  revalidatePath("/private");
 }

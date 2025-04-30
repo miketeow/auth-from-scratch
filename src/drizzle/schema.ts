@@ -30,7 +30,7 @@ export const userRelations = relations(UserTable, ({ many }) => ({
   oAuthAccounts: many(UserOAuthAccountTable),
 }));
 
-export const oAuthProviders = ["discord", "github"] as const;
+export const oAuthProviders = ["discord", "github", "google"] as const;
 export type OAuthProvider = (typeof oAuthProviders)[number];
 export const oAuthProviderEnum = pgEnum("oauth_provides", oAuthProviders);
 

@@ -1,4 +1,4 @@
-CREATE TYPE "public"."oauth_provides" AS ENUM('discord', 'github');--> statement-breakpoint
+CREATE TYPE "public"."oauth_provides" AS ENUM('discord', 'github', 'google');--> statement-breakpoint
 CREATE TYPE "public"."user_roles" AS ENUM('user', 'admin');--> statement-breakpoint
 CREATE TABLE "user_oauth_accounts" (
 	"userId" uuid NOT NULL,

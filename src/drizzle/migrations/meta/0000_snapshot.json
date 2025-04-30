@@ -1,5 +1,5 @@
 {
-  "id": "1a0f4915-63f0-4222-8542-5c5784f40598",
+  "id": "1deafd70-56c0-4ed3-a8c9-8b3db75342ba",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -161,7 +161,8 @@
       "schema": "public",
       "values": [
         "discord",
-        "github"
+        "github",
+        "google"
       ]
     },
     "public.user_roles": {

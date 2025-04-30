@@ -7,6 +7,7 @@ import { OAuthProvider } from "@/drizzle/schema";
 import { Cookies } from "../session";
 import { createDiscordOAuthClient } from "./discord";
 import { createGithubOAuthClient } from "./github";
+import { createGoogleOAuthClient } from "./google";
 
 const STATE_COOKIE_KEY = "oAuthState";
 const CODE_VERIFIER_COOKIE_KEY = "oAuthCodeVerifier";
@@ -73,9 +74,10 @@ export class OAuthClient<T> {
   createAuthUrl(cookies: Pick<Cookies, "set">) {
     const state = createState(cookies);
     const codeVerifier = createCodeVerifier(cookies);
+
     const url = new URL(this.urls.auth);
     url.searchParams.set("client_id", this.clientId);
-    url.searchParams.set("redirect_url", this.redirectUrl.toString());
+    url.searchParams.set("redirect_uri", this.redirectUrl.toString());
     url.searchParams.set("response_type", "code");
     url.searchParams.set("scope", this.scopes.join(" "));
     url.searchParams.set("state", state);
@@ -117,6 +119,7 @@ export class OAuthClient<T> {
 
   private fetchToken(code: string, codeVerifier: string) {
     const redirectUriToSend = this.redirectUrl.toString();
+
     return fetch(this.urls.token, {
       method: "POST",
       headers: {
@@ -151,6 +154,8 @@ export function getOAuthClient(provider: OAuthProvider) {
       return createDiscordOAuthClient();
     case "github":
       return createGithubOAuthClient();
+    case "google":
+      return createGoogleOAuthClient();
     default:
       throw new Error(`Invalid provider: ${provider satisfies never}`);
   }
